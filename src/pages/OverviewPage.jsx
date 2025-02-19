@@ -1,20 +1,20 @@
 import { BarChart2, ShoppingBag, Users, Zap } from "lucide-react";
 
-import Header from "../components/Header";
-import StatCard from "../components/StatCard";
-import OrdersTable from "../components/OrdersTable";
-import UserActivityHeatmap from "../components/UserActivityHeatmap";
-import SalesOverviewChart from "../components/SalesOverviewChart";
+import { motion } from 'framer-motion';
 import CategoryDistributionChart from "../components/CategoryDistributionChart";
+import Header from "../components/Header";
+import OrdersTable from "../components/OrdersTable";
 import Products from "../components/Products";
+import SalesOverviewChart from "../components/SalesOverviewChart";
+import StatCard from "../components/StatCard";
+import UserActivityHeatmap from "../components/UserActivityHeatmap";
 
 const OverviewPage = () => {
   return (
     <div className="flex-1 overflow-auto relative z-10">
-      <Header title="Analytics" />
-
+      <Header />
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
-        <div
+        <motion.div
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -52,7 +52,7 @@ const OverviewPage = () => {
             arrow={false}
             status={true}
           />
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           <CategoryDistributionChart />

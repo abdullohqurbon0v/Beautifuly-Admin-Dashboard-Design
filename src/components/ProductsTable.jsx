@@ -1,24 +1,24 @@
 import {
-  Edit,
-  Search,
-  Trash2,
-  User,
   ChevronsUpDown,
+  Edit,
+  MapPin,
   Phone,
+  Search,
   ShoppingBag,
   SquareCheck,
-  MapPin,
+  Trash2,
+  User,
 } from "lucide-react";
 import {
-  FaGoogle,
   FaFacebook,
-  FaTwitter,
-  FaYoutube,
+  FaGoogle,
+  FaLinkedin,
+  FaPinterest,
   FaReddit,
   FaSpotify,
-  FaPinterest,
   FaTwitch,
-  FaLinkedin,
+  FaTwitter,
+  FaYoutube,
 } from "react-icons/fa";
 import { FaWebflow } from "react-icons/fa6";
 
@@ -133,15 +133,15 @@ const ProductsTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-100">Product List</h2>
-        <div className="relative">
+        <div className="flex items-center px-5 bg-gray-700 rounded-lg">
+          <Search className=" text-gray-400" size={18} />
           <input
             type="text"
             placeholder="Search products..."
-            className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-white bg-transparent placeholder-gray-400 rounded-lg  pl-2 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
         </div>
       </div>
 

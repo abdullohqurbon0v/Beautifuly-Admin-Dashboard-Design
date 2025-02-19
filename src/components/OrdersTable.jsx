@@ -1,10 +1,8 @@
-import { useState } from "react";
-import { Search, Edit, Trash2 } from "lucide-react";
-import { GoPersonFill } from "react-icons/go";
+import { Edit, Search, Trash2 } from "lucide-react";
 import { BsCalendarDateFill } from "react-icons/bs";
-import { FaCheckSquare } from "react-icons/fa";
+import { FaCheckSquare, FaGripLines } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
-import { FaGripLines } from "react-icons/fa";
+import { GoPersonFill } from "react-icons/go";
 
 const orderData = [
   {
@@ -60,15 +58,15 @@ const orderData = [
 const OrdersTable = () => {
   return (
     <div className="bg-[#0B1739] bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 ">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-100">Orders Status</h2>
-        <div className="relative">
+        <div className="flex items-center px-5 bg-gray-700 rounded-lg">
+          <Search className=" text-gray-400" size={18} />
           <input
             type="text"
             placeholder="Search orders..."
-            className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className=" w-full text-white bg-transparent placeholder-gray-400 rounded-lg  pl-2 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
         </div>
       </div>
 
@@ -153,9 +151,9 @@ const OrdersTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   {order.country}
                 </td>
-                <td className="px-6 space-x-4 py-4 whitespace-nowrap text-sm flex text-gray-300">
+                <td className="px-6 space-x-6 py-4 whitespace-nowrap text-sm flex text-gray-300">
                   <div>${order.total.toFixed(2)}</div>
-                  <div>
+                  <div className="flex items-center space-x-3">
                     <button className="text-indigo-400 hover:text-indigo-300 mr-2">
                       <Edit size={18} />
                     </button>

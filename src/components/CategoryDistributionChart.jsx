@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell } from "recharts";
+import { Cell, Pie, PieChart } from "recharts";
 
 const organicData = [{ name: "Direct", value: 20, color: "#00C2FF" }];
 const socialData = [{ name: "Social", value: 50, color: "#0E43FB" }];
@@ -7,10 +7,7 @@ const directData = [{ name: "Organic", value: 30, color: "#054649" }];
 const CategoryDistributionChart = () => {
   return (
     <div
-      className="bg-[#0B1739] bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3 }}
+      className="bg-[#0B1739] w-full bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6"
     >
       <h2 className="text-lg font-medium mb-4 text-gray-100">
         Website Visitors
@@ -42,7 +39,7 @@ const CategoryDistributionChart = () => {
           <Pie
             data={directData}
             dataKey="value"
-            innerRadius={85}
+            innerRadius={95}
             outerRadius={95}
             startAngle={180}
             endAngle={-130}
