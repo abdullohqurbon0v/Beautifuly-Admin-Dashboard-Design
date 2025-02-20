@@ -123,6 +123,7 @@ const OrdersTable = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
+                className="hover:bg-slate-900"
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">
                   {order.id}
