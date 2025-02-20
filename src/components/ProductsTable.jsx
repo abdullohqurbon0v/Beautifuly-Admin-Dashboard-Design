@@ -140,7 +140,7 @@ const ProductsTable = () => {
           <input
             type="text"
             placeholder="Search products..."
-            className="w-full text-white bg-transparent placeholder-gray-400 rounded-lg  pl-2 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-white bg-transparent placeholder-gray-400 rounded-lg  pl-2 pr-4 py-2 focus:outline-none"
           />
         </div>
       </div>
@@ -214,7 +214,7 @@ const ProductsTable = () => {
                   {product.status}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  <button className="text-indigo-400 hover:text-indigo-300 mr-2">
+                  <button className="text-indigo-400 hover:text-indigo-300 mr-6">
                     <Edit size={18} />
                   </button>
                   <button className="text-red-400 hover:text-red-300">

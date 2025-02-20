@@ -65,7 +65,7 @@ const OrdersTable = () => {
           <input
             type="text"
             placeholder="Search orders..."
-            className=" w-full text-white bg-transparent placeholder-gray-400 rounded-lg  pl-2 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className=" w-full text-white bg-transparent placeholder-gray-400 rounded-lg  pl-2 pr-4 py-2 focus:outline-none"
           />
         </div>
       </div>
