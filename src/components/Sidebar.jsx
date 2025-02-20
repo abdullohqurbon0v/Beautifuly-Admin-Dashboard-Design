@@ -27,7 +27,7 @@ const Sidebar = () => {
   return (
     <div
       className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${
-        isSidebarOpen ? "w-64" : "w-20"
+        isSidebarOpen ? "w-auto" : "w-20"
       }`}
     >
       <div className="h-full bg-[#081028] p-4 flex flex-col shadow-2xl border-r border-[#263c7f6e]">

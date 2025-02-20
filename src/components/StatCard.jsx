@@ -1,9 +1,9 @@
-import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 const StatCard = ({ name, icon: Icon, value, color, arrow, status }) => {
   return (
     <div
-      className="bg-[#0B1739] bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl"
+      className="bg-[#0B1739] bg-opacity-50 backdrop-blur-md overflow-hidden hover:bg-slate-800 cursor-pointer transition-all shadow-lg rounded-xl"
       whileHover={{ y: -5, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)" }}
     >
       <div className="px-4 py-5 sm:p-6">
@@ -16,7 +16,7 @@ const StatCard = ({ name, icon: Icon, value, color, arrow, status }) => {
 
           {status && (
             <div
-              className={`flex items-center px-3 py-1 rounded-md text-sm font-semibold 
+              className={`flex items-center px-3 py-1 rounded-md text-sm font-semibold
     ${arrow ? "bg-green-900 text-green-400" : "bg-red-900 text-red-400"}`}
             >
               {value}%
