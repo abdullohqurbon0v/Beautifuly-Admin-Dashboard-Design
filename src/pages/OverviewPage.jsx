@@ -8,7 +8,6 @@ import Products from "../components/Products";
 import SalesOverviewChart from "../components/SalesOverviewChart";
 import StatCard from "../components/StatCard";
 import UserActivityHeatmap from "../components/UserActivityHeatmap";
-
 const OverviewPage = () => {
   return (
     <div className="flex-1 overflow-auto relative z-10">

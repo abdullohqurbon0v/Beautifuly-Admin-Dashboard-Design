@@ -3,8 +3,7 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 const StatCard = ({ name, icon: Icon, value, color, arrow, status }) => {
   return (
     <div
-      className="bg-[#0B1739] bg-opacity-50 backdrop-blur-md overflow-hidden hover:bg-slate-800 cursor-pointer transition-all shadow-lg rounded-xl"
-      whileHover={{ y: -5, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)" }}
+      className="bg-[#0B1739] bg-opacity-50  overflow-hidden hover:bg-slate-800 cursor-pointer transition-all shadow-lg rounded-xl"
     >
       <div className="px-4 py-5 sm:p-6">
         <span className="flex items-center text-sm font-medium text-gray-400">

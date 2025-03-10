@@ -1,152 +1,149 @@
 import {
+  Calendar,
   ChevronsUpDown,
   Edit,
-  MapPin,
+  PencilLine,
   Phone,
   Search,
-  ShoppingBag,
-  SquareCheck,
   Trash2,
   User,
 } from "lucide-react";
-import {
-  FaFacebook,
-  FaGoogle,
-  FaLinkedin,
-  FaPinterest,
-  FaReddit,
-  FaSpotify,
-  FaTwitch,
-  FaTwitter,
-  FaYoutube,
-} from "react-icons/fa";
-import { FaWebflow } from "react-icons/fa6";
+import { useUsers } from "../hooks/user-users";
+import Modal from 'react-modal';
+import { useState } from "react";
+import { $axios } from "../https/api";
 
-const PRODUCT_DATA = [
-  {
-    id: 1,
-    name: "John Carter",
-    email: "john@google.com",
-    phone: "(414) 907 - 1274",
-    location: "United States",
-    company: "Google",
-    iconCompany: <FaGoogle />,
-    status: "Online",
-  },
-  {
-    id: 2,
-    name: "Sophie Moore",
-    email: "sophie@webflow.com",
-    phone: "(240) 480 - 4277",
-    location: "United Kingdom",
-    company: "Webflow",
-    iconCompany: <FaWebflow />,
-    status: "Offline",
-  },
-  {
-    id: 3,
-    name: "Matt Cannon",
-    email: "matt@facebook.com",
-    phone: "(318) 598 - 9889",
-    location: "Australia",
-    company: "Facebook",
-    iconCompany: <FaFacebook />,
-    status: "Offline",
-  },
-  {
-    id: 4,
-    name: "Graham Hills",
-    email: "graham@twitter.com",
-    phone: "(540) 627 - 3890",
-    location: "India",
-    company: "Twitter",
-    iconCompany: <FaTwitter />,
-    status: "Online",
-  },
-  {
-    id: 5,
-    name: "Sandy Houston",
-    email: "sandy@youtube.com",
-    phone: "(440) 410 - 3848",
-    location: "Canada",
-    company: "YouTube",
-    iconCompany: <FaYoutube />,
-    status: "Offline",
-  },
-  {
-    id: 6,
-    name: "Andy Smith",
-    email: "andy@reddit.com",
-    phone: "(504) 458 - 3268",
-    location: "United States",
-    company: "Reddit",
-    iconCompany: <FaReddit />,
-    status: "Online",
-  },
-  {
-    id: 7,
-    name: "Lilly Woods",
-    email: "lilly@spotify.com",
-    phone: "(361) 692 - 1819",
-    location: "Australia",
-    company: "Spotify",
-    iconCompany: <FaSpotify />,
-    status: "Offline",
-  },
-  {
-    id: 8,
-    name: "Patrick Meyer",
-    email: "patrick@pinterest.com",
-    phone: "(760) 582 - 5670",
-    location: "United Kingdom",
-    company: "Pinterest",
-    iconCompany: <FaPinterest />,
-    status: "Online",
-  },
-  {
-    id: 9,
-    name: "Frances Willen",
-    email: "frances@twitch.com",
-    phone: "(216) 496 - 5684",
-    location: "Canada",
-    company: "Twitch",
-    iconCompany: <FaTwitch />,
-    status: "Offline",
-  },
-  {
-    id: 10,
-    name: "Ernest Houston",
-    email: "ernest@linkedin.com",
-    phone: "(704) 339 - 8813",
-    location: "India",
-    company: "LinkedIn",
-    iconCompany: <FaLinkedin />,
-    status: "Offline",
-  },
-];
+Modal.setAppElement('#root');
 
 const ProductsTable = () => {
-  return (
-    <div
-      className="bg-[#0B1739] bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6  mb-8"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-    >
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-100">Product List</h2>
-        <div className="flex items-center px-5 bg-gray-700 rounded-lg">
-          <Search className=" text-gray-400" size={18} />
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full text-white bg-transparent placeholder-gray-400 rounded-lg  pl-2 pr-4 py-2 focus:outline-none"
-          />
-        </div>
-      </div>
+  const [search, setSearch] = useState('');
+  const { users, setUsers } = useUsers();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
 
+  const handleSearchUser = (event) => {
+    const query = event.target.value.trim().toLowerCase();
+    setSearch(query);
+
+    const filteredUsers = users.filter(user =>
+      user.name.toLowerCase().includes(query) ||
+      user.phone.includes(query)
+    );
+
+    setUsers(filteredUsers);
+  };
+
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    console.log(selectedUser)
+    const updatedUsers = users.map(user =>
+      user.id === selectedUser.id ? selectedUser : user
+    );
+    setUsers(updatedUsers);
+    setIsEditModalOpen(false);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      const res = await $axios.delete(`/user/delete/${userToDelete.id}`,)
+      const filteredUsers = users.filter(user => user.id !== userToDelete.id);
+      setUsers(filteredUsers);
+      setIsDeleteModalOpen(false);
+      setUserToDelete(null);
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  return (
+    <div className="bg-[#0B1739] bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 mb-8">
+      <Modal
+        isOpen={isEditModalOpen}
+        onRequestClose={() => setIsEditModalOpen(false)}
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50"
+        className="bg-[#0B1739] rounded-lg p-6 max-w-md mx-auto mt-20 shadow-xl z-50 relative"
+      >
+        {selectedUser && (
+          <>
+            <h2 className="text-xl font-semibold text-gray-100 mb-4">Edit User</h2>
+            <form onSubmit={handleEditSubmit}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                  <input
+                    type="text"
+                    value={selectedUser.name}
+                    onChange={(e) => setSelectedUser({ ...selectedUser, name: e.target.value })}
+                    className="w-full bg-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Phone</label>
+                  <input
+                    type="text"
+                    value={selectedUser.phone}
+                    onChange={(e) => setSelectedUser({ ...selectedUser, phone: e.target.value })}
+                    className="w-full bg-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Subscription</label>
+                  <input
+                    type="text"
+                    value={selectedUser.subsciption || ''}
+                    onChange={(e) => setSelectedUser({ ...selectedUser, subsciption: e.target.value })}
+                    className="w-full bg-gray-700 rounded-lg px-4 py-2 text-gray-100 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end space-x-3">
+                <button type="button" onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 text-gray-300 hover:text-white">
+                  Cancel
+                </button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 rounded-lg text-white hover:bg-indigo-700">
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </>
+        )}
+      </Modal>
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onRequestClose={() => setIsDeleteModalOpen(false)}
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50"
+        className="bg-[#0B1739] rounded-lg p-6 max-w-md mx-auto mt-20 shadow-xl z-50 relative"
+      >
+        <div className="text-center">
+          <Trash2 className="mx-auto text-red-400 mb-4" size={40} />
+          <h2 className="text-xl font-semibold text-gray-100 mb-2">Delete User</h2>
+          <p className="text-gray-400 mb-6">Are you sure you want to delete {userToDelete?.name}? This action cannot be undone.</p>
+          <div className="flex justify-center space-x-4">
+            <button onClick={() => setIsDeleteModalOpen(false)} className="px-6 py-2 text-gray-300 hover:text-white">
+              Cancel
+            </button>
+            <button onClick={handleDeleteConfirm} className="px-6 py-2 bg-red-600 rounded-lg text-white hover:bg-red-700">
+              Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <div className="mb-4 flex items-center max-w-64 bg-gray-800 rounded-lg px-4 py-2">
+        <Search className="text-gray-400" size={20} />
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={search}
+          onChange={handleSearchUser}
+          className="w-full bg-transparent text-white placeholder-gray-500 px-3 focus:outline-none"
+        />
+      </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-700">
+        <table className="min-w-full divide-gray-700">
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">
@@ -165,59 +162,35 @@ const ProductsTable = () => {
               </th>
               <th className="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">
                 <div className="flex text-sm items-center font-bold space-x-2">
-                  <MapPin />
-                  <span>Location</span>
+                  <PencilLine />
+                  <span>Subsciption</span>
                   <ChevronsUpDown />
                 </div>
               </th>
               <th className="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">
                 <div className="flex text-sm items-center font-bold space-x-2">
-                  <ShoppingBag />
-                  <span>Company</span>
-                  <ChevronsUpDown />
-                </div>
-              </th>
-              <th className="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">
-                <div className="flex text-sm items-center font-bold space-x-2">
-                  <SquareCheck />
-                  <span>Status</span>
+                  <Calendar />
+                  <span>Created date</span>
                   <ChevronsUpDown />
                 </div>
               </th>
             </tr>
           </thead>
-
           <tbody className="divide-y divide-gray-700">
-            {PRODUCT_DATA.map((product) => (
-              <tr key={product.id} className="hover:bg-slate-900 cursor-pointer transition-all">
+            {users.map((user) => (
+              <tr key={user.id} className="hover:bg-slate-900 cursor-pointer transition-all">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 flex gap-2 items-center">
-                  <img
-                    src="https://images.unsplash.com/photo-1627989580309-bfaf3e58af6f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8d2lyZWxlc3MlMjBlYXJidWRzfGVufDB8fDB8fHww"
-                    alt="Product img"
-                    className="size-10 rounded-full"
-                  />
-                  {product.name}
+                  {user.image_url && <img src={user.image_url} alt="Product img" className="size-10 rounded-full" />}
+                  {user.name}
                 </td>
-
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{user.phone}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{user.subsciption || "No Subscriptions"}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 ">{user.created_at}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {product.phone}
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {product.location}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center space-x-2 text-gray-300">
-                  {product.iconCompany}
-                  <span>{product.company}</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {product.status}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  <button className="text-indigo-400 hover:text-indigo-300 mr-6">
+                  <button className="text-indigo-400 hover:text-indigo-300 mr-6" onClick={() => { setSelectedUser(user); setIsEditModalOpen(true); }}>
                     <Edit size={18} />
                   </button>
-                  <button className="text-red-400 hover:text-red-300">
+                  <button className="text-red-400 hover:text-red-300" onClick={() => { setUserToDelete(user); setIsDeleteModalOpen(true); }}>
                     <Trash2 size={18} />
                   </button>
                 </td>
@@ -229,4 +202,5 @@ const ProductsTable = () => {
     </div>
   );
 };
+
 export default ProductsTable;

@@ -11,8 +11,8 @@ import { Link } from "react-router-dom";
 
 const SIDEBAR_ITEMS = [
   { name: "Features", icon: BarChart2, color: "#F59E0B", href: "/" },
-  { name: "Users", icon: Users, color: "#3B82F6", href: "/products" },
-  { name: "Pricing", icon: DollarSign, color: "#6EE7B7", href: "/settings" },
+  { name: "Users", icon: Users, color: "#3B82F6", href: "/users" },
+  { name: "Pricing", icon: DollarSign, color: "#6EE7B7", href: "/pricings" },
   {
     name: "Integrations",
     icon: TrendingUp,
@@ -26,9 +26,8 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${
-        isSidebarOpen ? "w-auto" : "w-20"
-      }`}
+      className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? "w-auto" : "w-20"
+        }`}
     >
       <div className="h-full bg-[#081028] p-4 flex flex-col shadow-2xl border-r border-[#263c7f6e]">
         <div className="flex justify-between my-7">
