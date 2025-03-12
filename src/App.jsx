@@ -11,19 +11,24 @@ import { useUsers } from "./hooks/user-users";
 function App() {
   const [pagination, setPagination] = useState({
     limit: 10,
-    offset: 0
-  })
-  const { changeLoading, setUsers, setCount } = useUsers()
+    offset: 0,
+  });
+  const { changeLoading, setUsers, setCount } = useUsers();
 
   useEffect(() => {
     changeLoading();
-    localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDE3ODg4NjYsImlhdCI6MTc0MTUyOTY2Niwicm9sZSI6ImFkbWluIiwidXNlcl9pZCI6ImY3YjNiM2I0LTNiM2ItNGIzYi1iM2IzLWIzYjNiM2IzYjNiMyJ9.qt03BhGhw-TKKiYykOlafJaBpxss-gZGlKYem6iZfUA')
+    localStorage.setItem(
+      "token",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDIwNTA1NjcsImlhdCI6MTc0MTc5MTM2Nywicm9sZSI6ImFkbWluIiwidXNlcl9pZCI6ImY3YjNiM2I0LTNiM2ItNGIzYi1iM2IzLWIzYjNiM2IzYjNiMyJ9.02aXH-gp6P-5LhQXikjZl-9n0d1otxILieWep0e8-fI"
+    );
     async function getListUsers() {
       try {
-        const res = await $axios.get(`/user/get/list?offset=${pagination.offset}&limit=${pagination.limit}`);
-        console.log(res)
-        setUsers(res.data.users)
-        setCount(res.data.count)
+        const res = await $axios.get(
+          `/user/get/list?offset=${pagination.offset}&limit=${pagination.limit}`
+        );
+        console.log(res);
+        setUsers(res.data.users);
+        setCount(res.data.count);
       } catch (error) {
         console.error(error);
       } finally {
