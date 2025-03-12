@@ -1,17 +1,32 @@
 import { BarChart2, ShoppingBag, Users, Zap } from "lucide-react";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
-import { motion } from 'framer-motion';
 import CategoryDistributionChart from "../components/CategoryDistributionChart";
-import Header from "../components/Header";
 import OrdersTable from "../components/OrdersTable";
 import Products from "../components/Products";
 import SalesOverviewChart from "../components/SalesOverviewChart";
 import StatCard from "../components/StatCard";
 import UserActivityHeatmap from "../components/UserActivityHeatmap";
+import AddTestModal from "../components/AddTest";
+
 const OverviewPage = () => {
+  const [tasks, setTasks] = useState([]); // Состояние для списка тестов
+
+  // Функция для обновления списка тестов после добавления нового
+  const handleTestAdded = (newTest) => {
+    setTasks((prev) => [newTest, ...prev]);
+  };
+
   return (
     <div className="flex-1 overflow-auto relative z-10">
-      <Header />
+      <header className="bg-[#081028] bg-opacity-50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl font-semibold text-gray-100">Analytics</h1>
+          {/* Заменяем простую кнопку на AddTestModal */}
+          <AddTestModal onTestAdded={handleTestAdded} />
+        </div>
+      </header>
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
         <motion.div
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8"
@@ -59,9 +74,10 @@ const OverviewPage = () => {
           <Products />
           <SalesOverviewChart />
         </div>
-        <OrdersTable />
+        <OrdersTable tasks={tasks} setTasks={setTasks} />
       </main>
     </div>
   );
 };
+
 export default OverviewPage;
