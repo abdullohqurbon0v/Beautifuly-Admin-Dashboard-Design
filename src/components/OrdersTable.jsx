@@ -135,7 +135,7 @@ const OrdersTable = () => {
   return (
     <div className="bg-[#0B1739] bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-100">Orders Status</h2>
+        <h2 className="text-xl font-semibold text-gray-100">Tests Status</h2>
         <div className="flex items-center px-5 bg-gray-700 rounded-lg">
           <Search className="text-gray-400" size={18} />
           <input

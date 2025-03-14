@@ -7,9 +7,10 @@ import ProductsPage from "./pages/ProductsPage";
 import { useEffect, useState } from "react";
 import { $axios } from "./https/api";
 import { useUsers } from "./hooks/user-users";
+import Tests from "./pages/Tests";
 
 function App() {
-  const [pagination, setPagination] = useState({
+  const [pagination] = useState({
     limit: 10,
     offset: 0,
   });
@@ -44,6 +45,7 @@ function App() {
       <Routes>
         <Route path="/" element={<OverviewPage />} />
         <Route path="/users" element={<ProductsPage />} />
+        <Route path="/tests" element={<Tests />} />
       </Routes>
     </div>
   );

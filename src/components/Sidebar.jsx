@@ -1,24 +1,11 @@
-import {
-  BarChart2,
-  DollarSign,
-  Menu,
-  Search,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import { BarChart2, DollarSign, Menu, Search, Users } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SIDEBAR_ITEMS = [
-  { name: "Features", icon: BarChart2, color: "#F59E0B", href: "/" },
+  { name: "Dashboard", icon: BarChart2, color: "#F59E0B", href: "/" },
   { name: "Users", icon: Users, color: "#3B82F6", href: "/users" },
-  { name: "Pricing", icon: DollarSign, color: "#6EE7B7", href: "/pricings" },
-  {
-    name: "Integrations",
-    icon: TrendingUp,
-    color: "#00C2FF",
-    href: "/settings",
-  },
+  { name: "Tests", icon: DollarSign, color: "#6EE7B7", href: "/tests" },
 ];
 
 const Sidebar = () => {
@@ -26,8 +13,9 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? "w-auto" : "w-20"
-        }`}
+      className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${
+        isSidebarOpen ? "w-auto" : "w-20"
+      }`}
     >
       <div className="h-full bg-[#081028] p-4 flex flex-col shadow-2xl border-r border-[#263c7f6e]">
         <div className="flex justify-between my-7">
