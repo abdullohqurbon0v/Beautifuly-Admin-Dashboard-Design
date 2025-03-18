@@ -1,21 +1,13 @@
 import { BarChart2, ShoppingBag, Users, Zap } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 import CategoryDistributionChart from "../components/CategoryDistributionChart";
-import OrdersTable from "../components/OrdersTable";
 import Products from "../components/Products";
 import SalesOverviewChart from "../components/SalesOverviewChart";
 import StatCard from "../components/StatCard";
 import UserActivityHeatmap from "../components/UserActivityHeatmap";
-import AddTestModal from "../components/AddTest";
 
 const OverviewPage = () => {
-  const [tasks, setTasks] = useState([]);
-  const handleTestAdded = (newTest) => {
-    setTasks((prev) => [newTest, ...prev]);
-  };
-
   return (
     <div className="flex-1 overflow-auto relative z-10">
       <header className="bg-[#081028] bg-opacity-50">

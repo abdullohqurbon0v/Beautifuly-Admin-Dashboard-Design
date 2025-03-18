@@ -24,6 +24,7 @@ const ConnectedAccounts = () => {
     },
   ]);
   return (
+    // eslint-disable-next-line react/jsx-no-undef
     <SettingSection icon={HelpCircle} title={"Connected Accounts"}>
       {connectedAccounts.map((account) => (
         <div

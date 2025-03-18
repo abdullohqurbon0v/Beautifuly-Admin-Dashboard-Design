@@ -25,12 +25,7 @@ const salesData = [
 
 const SalesOverviewChart = () => {
   return (
-    <div
-      className="col-span-2 bg-[#0B1739] bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 "
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-    >
+    <div className="col-span-2 bg-[#0B1739] bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 ">
       <h2 className="text-lg font-medium mb-4 text-gray-100">Sales Overview</h2>
 
       <div className="h-60">

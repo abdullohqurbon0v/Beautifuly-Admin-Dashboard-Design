@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { $axios } from "./https/api";
 import { useUsers } from "./hooks/user-users";
 import Tests from "./pages/Tests";
+import Lessons from "./pages/Lessons";
 
 function App() {
   const [pagination] = useState({
@@ -20,7 +21,7 @@ function App() {
     changeLoading();
     localStorage.setItem(
       "token",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDIwNTA1NjcsImlhdCI6MTc0MTc5MTM2Nywicm9sZSI6ImFkbWluIiwidXNlcl9pZCI6ImY3YjNiM2I0LTNiM2ItNGIzYi1iM2IzLWIzYjNiM2IzYjNiMyJ9.02aXH-gp6P-5LhQXikjZl-9n0d1otxILieWep0e8-fI"
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI1Njc2MDUsImlhdCI6MTc0MjMwODQwNSwicm9sZSI6ImFkbWluIiwidXNlcl9pZCI6ImY3YjNiM2I0LTNiM2ItNGIzYi1iM2IzLWIzYjNiM2IzYjNiMyJ9.xdSgaq53EumPejTE5Wg1gl5hvKdMebrEvHhVxGqVjmE"
     );
     async function getListUsers() {
       try {
@@ -46,6 +47,7 @@ function App() {
         <Route path="/" element={<OverviewPage />} />
         <Route path="/users" element={<ProductsPage />} />
         <Route path="/tests" element={<Tests />} />
+        <Route path="/lessons" element={<Lessons />} />
       </Routes>
     </div>
   );

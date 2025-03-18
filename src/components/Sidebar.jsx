@@ -1,4 +1,11 @@
-import { BarChart2, DollarSign, Menu, Search, Users } from "lucide-react";
+import {
+  BarChart2,
+  BookOpen,
+  DollarSign,
+  Menu,
+  Search,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -6,6 +13,7 @@ const SIDEBAR_ITEMS = [
   { name: "Dashboard", icon: BarChart2, color: "#F59E0B", href: "/" },
   { name: "Users", icon: Users, color: "#3B82F6", href: "/users" },
   { name: "Tests", icon: DollarSign, color: "#6EE7B7", href: "/tests" },
+  { name: "Lessons", icon: BookOpen, color: "#26e1eb", href: "/lessons" },
 ];
 
 const Sidebar = () => {
