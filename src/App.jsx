@@ -1,7 +1,5 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-
 import Sidebar from "./components/Sidebar";
-
 import OverviewPage from "./pages/OverviewPage";
 import ProductsPage from "./pages/ProductsPage";
 import { useEffect, useState } from "react";
@@ -20,30 +18,39 @@ function App() {
   const { changeLoading, setUsers, setCount } = useUsers();
 
   useEffect(() => {
-    changeLoading();
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/signin");
-      return;
-    }
-
-    async function getListUsers() {
+    const checkAuthAndFetchUsers = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/signin");
+        return;
+      }
+      changeLoading();
       try {
         const res = await $axios.get(
           `/user/get/list?offset=${pagination.offset}&limit=${pagination.limit}`
         );
-        console.log(res);
         setUsers(res.data.users);
         setCount(res.data.count);
       } catch (error) {
         console.error(error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("token");
+          navigate("/signin");
+        }
       } finally {
         changeLoading();
       }
-    }
-    getListUsers();
-  }, []);
+    };
+
+    checkAuthAndFetchUsers();
+  }, [
+    navigate,
+    pagination.offset,
+    pagination.limit,
+    changeLoading,
+    setUsers,
+    setCount,
+  ]);
 
   return (
     <div className="flex h-screen bg-[#081028] text-gray-100 overflow-hidden">
