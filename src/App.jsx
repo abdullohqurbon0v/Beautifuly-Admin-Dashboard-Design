@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Sidebar from "./components/Sidebar";
 
@@ -9,8 +9,10 @@ import { $axios } from "./https/api";
 import { useUsers } from "./hooks/user-users";
 import Tests from "./pages/Tests";
 import Lessons from "./pages/Lessons";
+import SignIn from "./pages/SignIn";
 
 function App() {
+  const navigate = useNavigate();
   const [pagination] = useState({
     limit: 10,
     offset: 0,
@@ -19,10 +21,13 @@ function App() {
 
   useEffect(() => {
     changeLoading();
-    localStorage.setItem(
-      "token",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI1Njc2MDUsImlhdCI6MTc0MjMwODQwNSwicm9sZSI6ImFkbWluIiwidXNlcl9pZCI6ImY3YjNiM2I0LTNiM2ItNGIzYi1iM2IzLWIzYjNiM2IzYjNiMyJ9.xdSgaq53EumPejTE5Wg1gl5hvKdMebrEvHhVxGqVjmE"
-    );
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/signin");
+      return;
+    }
+
     async function getListUsers() {
       try {
         const res = await $axios.get(
@@ -48,6 +53,7 @@ function App() {
         <Route path="/users" element={<ProductsPage />} />
         <Route path="/tests" element={<Tests />} />
         <Route path="/lessons" element={<Lessons />} />
+        <Route path="/signin" element={<SignIn />} />
       </Routes>
     </div>
   );
