@@ -1,4 +1,4 @@
-import { Edit, Search, Trash2 } from "lucide-react";
+import { Edit, Search, Trash2, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { $axios } from "../https/api";
@@ -21,11 +21,10 @@ const OrdersTable = () => {
     title: { uz: "", ru: "", en: "" },
     description: { uz: "", ru: "", en: "" },
     correct_answer: { uz: "", ru: "", en: "" },
-    answers: {
-      a: { uz: "", ru: "", en: "" },
-      b: { uz: "", ru: "", en: "" },
-      c: { uz: "", ru: "", en: "" },
-    },
+    answers: [
+      { id: "a", uz: "", ru: "", en: "" },
+      { id: "b", uz: "", ru: "", en: "" },
+    ],
     category_id: "",
   });
 
@@ -37,36 +36,76 @@ const OrdersTable = () => {
     }));
   };
 
+  const addAnswerOption = () => {
+    const newId = String.fromCharCode(97 + editedTask.answers.length);
+    setEditedTask((prev) => ({
+      ...prev,
+      answers: [...prev.answers, { id: newId, uz: "", ru: "", en: "" }],
+    }));
+  };
+
+  const removeAnswerOption = (index) => {
+    if (editedTask.answers.length > 2) {
+      setEditedTask((prev) => ({
+        ...prev,
+        answers: prev.answers
+          .filter((_, i) => i !== index)
+          .map((answer, i) => ({
+            ...answer,
+            id: String.fromCharCode(97 + i),
+          })),
+      }));
+    }
+  };
+
+  const updateAnswer = (index, lang, value) => {
+    setEditedTask((prev) => ({
+      ...prev,
+      answers: prev.answers.map((answer, i) =>
+        i === index ? { ...answer, [lang]: value } : answer
+      ),
+    }));
+  };
+
   const handleEditData = async (e) => {
     e.preventDefault();
     try {
-      const res = await $axios.put(`/test/update?id=${selectedTask.id}`, {
+      const payload = {
         title: editedTask.title,
         description: editedTask.description,
         correct_answer: editedTask.correct_answer,
         answers: {
-          uz: [
-            editedTask.answers.a.uz,
-            editedTask.answers.b.uz,
-            editedTask.answers.c.uz,
-          ],
-          ru: [
-            editedTask.answers.a.ru,
-            editedTask.answers.b.ru,
-            editedTask.answers.c.ru,
-          ],
-          en: [
-            editedTask.answers.a.en,
-            editedTask.answers.b.en,
-            editedTask.answers.c.en,
-          ],
+          uz: editedTask.answers.map((answer) => answer.uz),
+          ru: editedTask.answers.map((answer) => answer.ru),
+          en: editedTask.answers.map((answer) => answer.en),
         },
         category_id: editedTask.category_id,
-      });
-      console.log(res);
+      };
+      const res = await $axios.put(
+        `/test/update?id=${selectedTask.id}`,
+        payload
+      );
+      // Update the specific task in the list with the response data
+      setTasks((prev) =>
+        prev.map((task) =>
+          task.id === selectedTask.id ? { ...task, ...res.data } : task
+        )
+      );
       setEditModalOpen(false);
     } catch (error) {
       console.error("Edit failed:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await $axios.delete(`/test/delete?id=${selectedTask.id}`);
+      // Filter out the deleted task and ensure tasks remains an array
+      setTasks((prev) => prev.filter((task) => task.id !== selectedTask.id));
+      setCount((prev) => prev - 1);
+      setDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Delete failed:", error);
     }
   };
 
@@ -80,13 +119,12 @@ const OrdersTable = () => {
           ),
           $axios.get(`/category/get/list`),
         ]);
-        console.log(tasksRes);
-
         setCategories(categoriesRes.data.categories);
         setCount(tasksRes.data.count);
-        setTasks(tasksRes.data.tests);
+        setTasks(tasksRes.data.tests); // This is protected by the setTasks fix
       } catch (error) {
         console.error("Fetch failed:", error);
+        setTasks([]); // Fallback to empty array on error
       } finally {
         changeLoading(false);
       }
@@ -94,39 +132,33 @@ const OrdersTable = () => {
     getTasks();
   }, [filters, changeLoading, setTasks, setCount]);
 
-  const handleDelete = async () => {
-    try {
-      await $axios.delete(`/test/delete?id=${selectedTask.id}`);
-
-      setDeleteModalOpen(false);
-    } catch (error) {
-      console.error("Delete failed:", error);
-    }
-  };
-
   const handleEditOpen = (task) => {
     setSelectedTask(task);
     setEditedTask({
       title: { ...task.title },
       description: { ...task.description },
       correct_answer: { ...task.correct_answer },
-      answers: {
-        a: {
-          uz: task.answers?.uz?.[0] || "",
-          ru: task.answers?.ru?.[0] || "",
-          en: task.answers?.en?.[0] || "",
-        },
-        b: {
-          uz: task.answers?.uz?.[1] || "",
-          ru: task.answers?.ru?.[1] || "",
-          en: task.answers?.en?.[1] || "",
-        },
-        c: {
-          uz: task.answers?.uz?.[2] || "",
-          ru: task.answers?.ru?.[2] || "",
-          en: task.answers?.en?.[2] || "",
-        },
-      },
+      answers: task.answers?.uz
+        ? task.answers.uz.map((uz, index) => ({
+            id: String.fromCharCode(97 + index),
+            uz,
+            ru: task.answers.ru[index] || "",
+            en: task.answers.en[index] || "",
+          }))
+        : [
+            {
+              id: "a",
+              uz: task.answers?.uz?.[0] || "",
+              ru: task.answers?.ru?.[0] || "",
+              en: task.answers?.en?.[0] || "",
+            },
+            {
+              id: "b",
+              uz: task.answers?.uz?.[1] || "",
+              ru: task.answers?.ru?.[1] || "",
+              en: task.answers?.en?.[1] || "",
+            },
+          ],
       category_id: task.category_id || "",
     });
     setEditModalOpen(true);
@@ -150,18 +182,23 @@ const OrdersTable = () => {
         <table className="min-w-full divide-y divide-gray-700">
           <thead>
             <tr>
-              {["Title", "Category", "Description", "Correct Answer", ""].map(
-                (h) => (
-                  <th
-                    key={h}
-                    className="px-6 py-3 text-left text-gray-400 uppercase tracking-wider"
-                  >
-                    <div className="flex items-center font-bold space-x-2">
-                      <span>{h}</span>
-                    </div>
-                  </th>
-                )
-              )}
+              {[
+                "Title",
+                "Category",
+                "Description",
+                "Correct Answer",
+                "Answers",
+                "",
+              ].map((h) => (
+                <th
+                  key={h}
+                  className="px-6 py-3 text-left text-gray-400 uppercase tracking-wider"
+                >
+                  <div className="flex items-center font-bold space-x-2">
+                    <span>{h}</span>
+                  </div>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
@@ -177,7 +214,10 @@ const OrdersTable = () => {
                   {task.description.en}
                 </td>
                 <td className="px-6 py-4 truncate text-sm text-gray-300 max-w-[200px]">
-                  {task.correct_answer.en}
+                  {task.correct_answer?.en}
+                </td>
+                <td className="px-6 py-4 truncate text-sm text-gray-300 max-w-[200px]">
+                  {task.answers?.en?.join(", ")}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-300">
                   <div className="flex items-center space-x-3">
@@ -317,37 +357,47 @@ const OrdersTable = () => {
           </div>
 
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-300">
-              Answers
-            </label>
-            {["a", "b", "c"].map((key) => (
-              <div key={key} className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-sm font-medium text-gray-300">
+                Answers
+              </label>
+              <button
+                type="button"
+                onClick={addAnswerOption}
+                className="flex items-center px-2 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition text-sm"
+              >
+                <Plus size={14} className="mr-1" />
+                Add Option
+              </button>
+            </div>
+            {editedTask.answers.map((answer, index) => (
+              <div key={answer.id} className="mb-4 relative">
                 <p className="text-sm mb-1 text-gray-400">
-                  Answer {key.toUpperCase()}
+                  Answer {answer.id.toUpperCase()}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {["uz", "ru", "en"].map((lang) => (
                     <input
-                      key={`${key}-${lang}`}
+                      key={`${answer.id}-${lang}`}
                       type="text"
-                      placeholder={`Answer ${key.toUpperCase()} (${lang.toUpperCase()})`}
-                      value={editedTask.answers[key][lang]}
+                      placeholder={`Answer ${answer.id.toUpperCase()} (${lang.toUpperCase()})`}
+                      value={answer[lang]}
                       onChange={(e) =>
-                        setEditedTask((prev) => ({
-                          ...prev,
-                          answers: {
-                            ...prev.answers,
-                            [key]: {
-                              ...prev.answers[key],
-                              [lang]: e.target.value,
-                            },
-                          },
-                        }))
+                        updateAnswer(index, lang, e.target.value)
                       }
                       className="w-full p-2 rounded-lg bg-slate-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   ))}
                 </div>
+                {editedTask.answers.length > 2 && (
+                  <button
+                    type="button"
+                    onClick={() => removeAnswerOption(index)}
+                    className="absolute -top-2 right-0 text-red-400 hover:text-red-300 text-sm"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
               </div>
             ))}
           </div>

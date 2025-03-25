@@ -2,9 +2,11 @@ import {
   BarChart2,
   BookOpen,
   DollarSign,
+  Folder,
   Menu,
   Search,
   Users,
+  Video,
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -14,6 +16,8 @@ const SIDEBAR_ITEMS = [
   { name: "Users", icon: Users, color: "#3B82F6", href: "/users" },
   { name: "Tests", icon: DollarSign, color: "#6EE7B7", href: "/tests" },
   { name: "Lessons", icon: BookOpen, color: "#26e1eb", href: "/lessons" },
+  { name: "Category", icon: Folder, color: "#26e1eb", href: "/categorys" },
+  { name: "Video", icon: Video, color: "#26e1eb", href: "/videos" },
 ];
 
 const Sidebar = () => {

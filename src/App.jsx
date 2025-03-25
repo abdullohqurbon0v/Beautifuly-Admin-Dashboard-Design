@@ -8,6 +8,8 @@ import { useUsers } from "./hooks/user-users";
 import Tests from "./pages/Tests";
 import Lessons from "./pages/Lessons";
 import SignIn from "./pages/SignIn";
+import Category from "./pages/Category";
+import Video from "./pages/Video";
 
 function App() {
   const navigate = useNavigate();
@@ -60,6 +62,8 @@ function App() {
         <Route path="/users" element={<ProductsPage />} />
         <Route path="/tests" element={<Tests />} />
         <Route path="/lessons" element={<Lessons />} />
+        <Route path="/categorys" element={<Category />} />
+        <Route path="/videos" element={<Video />} />
         <Route path="/signin" element={<SignIn />} />
       </Routes>
     </div>

@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { $axios } from "../https/api";
@@ -14,11 +14,10 @@ const AddTestModal = ({ onTestAdded }) => {
     title: { uz: "", ru: "", en: "" },
     description: { uz: "", ru: "", en: "" },
     correct_answer: { uz: "", ru: "", en: "" },
-    answers: {
-      a: { uz: "", ru: "", en: "" },
-      b: { uz: "", ru: "", en: "" },
-      c: { uz: "", ru: "", en: "" },
-    },
+    answers: [
+      { id: "a", uz: "", ru: "", en: "" },
+      { id: "b", uz: "", ru: "", en: "" },
+    ],
     category_id: "",
   });
 
@@ -33,6 +32,36 @@ const AddTestModal = ({ onTestAdded }) => {
     };
     fetchCategories();
   }, []);
+
+  const addAnswerOption = () => {
+    const newId = String.fromCharCode(97 + newTest.answers.length);
+    setNewTest((prev) => ({
+      ...prev,
+      answers: [...prev.answers, { id: newId, uz: "", ru: "", en: "" }],
+    }));
+  };
+
+  const removeAnswerOption = (index) => {
+    if (newTest.answers.length > 2) {
+      setNewTest((prev) => ({
+        ...prev,
+        answers: prev.answers
+          .filter((_, i) => i !== index)
+          .map((answer, i) => ({
+            ...answer,
+            id: String.fromCharCode(97 + i),
+          })),
+      }));
+    }
+  };
+  const updateAnswer = (index, lang, value) => {
+    setNewTest((prev) => ({
+      ...prev,
+      answers: prev.answers.map((answer, i) =>
+        i === index ? { ...answer, [lang]: value } : answer
+      ),
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,25 +85,12 @@ const AddTestModal = ({ onTestAdded }) => {
           en: newTest.correct_answer.en,
         },
         answers: {
-          uz: [
-            newTest.answers.a.uz,
-            newTest.answers.b.uz,
-            newTest.answers.c.uz,
-          ],
-          ru: [
-            newTest.answers.a.ru,
-            newTest.answers.b.ru,
-            newTest.answers.c.ru,
-          ],
-          en: [
-            newTest.answers.a.en,
-            newTest.answers.b.en,
-            newTest.answers.c.en,
-          ],
+          uz: newTest.answers.map((answer) => answer.uz),
+          ru: newTest.answers.map((answer) => answer.ru),
+          en: newTest.answers.map((answer) => answer.en),
         },
         category_id: newTest.category_id,
       };
-      console.log(payload);
 
       const res = await $axios.post("/test/create", payload);
       console.log(res);
@@ -83,11 +99,10 @@ const AddTestModal = ({ onTestAdded }) => {
         title: { uz: "", ru: "", en: "" },
         description: { uz: "", ru: "", en: "" },
         correct_answer: { uz: "", ru: "", en: "" },
-        answers: {
-          a: { uz: "", ru: "", en: "" },
-          b: { uz: "", ru: "", en: "" },
-          c: { uz: "", ru: "", en: "" },
-        },
+        answers: [
+          { id: "a", uz: "", ru: "", en: "" },
+          { id: "b", uz: "", ru: "", en: "" },
+        ],
         category_id: "",
       });
       setIsOpen(false);
@@ -198,38 +213,48 @@ const AddTestModal = ({ onTestAdded }) => {
           </div>
 
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-300">
-              Answers
-            </label>
-            {["a", "b", "c"].map((key) => (
-              <div key={key} className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-sm font-medium text-gray-300">
+                Answers
+              </label>
+              <button
+                type="button"
+                onClick={addAnswerOption}
+                className="flex items-center px-2 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition text-sm"
+              >
+                <Plus size={14} className="mr-1" />
+                Add Option
+              </button>
+            </div>
+            {newTest.answers.map((answer, index) => (
+              <div key={answer.id} className="mb-4 relative">
                 <p className="text-sm mb-1 text-gray-400">
-                  Answer {key.toUpperCase()}
+                  Answer {answer.id.toUpperCase()}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {["uz", "ru", "en"].map((lang) => (
                     <input
-                      key={`${key}-${lang}`}
+                      key={`${answer.id}-${lang}`}
                       type="text"
-                      placeholder={`Answer ${key.toUpperCase()} (${lang.toUpperCase()})`}
-                      value={newTest.answers[key][lang]}
+                      placeholder={`Answer ${answer.id.toUpperCase()} (${lang.toUpperCase()})`}
+                      value={answer[lang]}
                       onChange={(e) =>
-                        setNewTest((prev) => ({
-                          ...prev,
-                          answers: {
-                            ...prev.answers,
-                            [key]: {
-                              ...prev.answers[key],
-                              [lang]: e.target.value,
-                            },
-                          },
-                        }))
+                        updateAnswer(index, lang, e.target.value)
                       }
                       className="w-full p-2 rounded-lg bg-slate-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     />
                   ))}
                 </div>
+                {newTest.answers.length > 2 && (
+                  <button
+                    type="button"
+                    onClick={() => removeAnswerOption(index)}
+                    className="absolute -top-2 right-0 text-red-400 hover:text-red-300 text-sm"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
               </div>
             ))}
           </div>
